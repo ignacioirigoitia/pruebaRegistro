@@ -12,14 +12,14 @@ module.exports = [
 
     /* chequeo que el mail no este registrado */
     body("email").custom(value => {
-        let result = users_db.find(user => user.email === value);
+        let result = users_db.find(user => user.email === value)
 
         if(result){
             return false
         }else{
-            true
-        };
-    }).withMessage("El email esta registrado"),
+            return true
+        }
+    }).withMessage("El email esta registrado"), 
 
     /* chequeo que la contraseña sea minimo 6 y maximo 12 */
     check("pass").isLength({min: 6, max: 12}).withMessage("Minimo 6 y maximo 12"),

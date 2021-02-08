@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": 1,
+    "username": "nacho",
+    "email": "ignacio.irigoitia@gmail.com",
+    "pass": "$2b$12$5HpSCj.jjsEgMbB/QNXiT.hFL8lnHg5prL8Wur6oDv.t../bsOEru",
+    "avatar": "avatar-1612803711945.jpeg"
+  }
+]

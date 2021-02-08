@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +7,16 @@
     <title>Profile</title>
 </head>
 <body>
+    <%- include("partials/header")  %> 
     <h1>Profile</h1>
+
+    <!-- uso los datos de res.locals.user SIN NECESIDAD de poner res.locals -->
+    <p>Nombre de usuario: <span><%= user.username %></span></p>
+
+    <!-- <p>Email: <span></span></p> -->
+    <img src="/images/<%= user.avatar %>" alt="imagen de usuario">
+    <form action="/users/delete/<%= user.id %>?_method=DELETE" method="POST">
+        <button type="submit">ELIMINAR CUENTA</button>
+    </form>
 </body>
 </html>

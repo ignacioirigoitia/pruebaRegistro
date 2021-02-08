@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path")
 const users_db = JSON.parse(fs.readFileSync("./data/users.json", "utf-8"));
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
@@ -11,6 +12,7 @@ module.exports = {
 
         /* me traigo los errores */
         let errores = validationResult(req);
+        
 
         /* si hay errores envio los errores al ejs */
         if (!errores.isEmpty()) {
@@ -71,15 +73,28 @@ module.exports = {
             /* verifico que el email este en la base de datos */
             let result = users_db.find(user => user.email === email);
 
-            /* verifico que la contraseña sea la misma */
+            /* verifico que la contraseña sea la misma y si es positivo redirigo al perfil */
             if(result){
                 if (bcrypt.compareSync(pass.trim(), result.pass)) {
+
+                    //guardo en el objeto session.user los datos del usuario para levantar session del usuario
+                    req.session.user = {
+                        id: result.id,
+                        username: result.username,
+                        avatar: result.avatar
+                    }
+
+                    // creo la cookie para cuando el usuario elija recordarme
+                    if(recordar != "undefined"){
+                        res.cookie("userCom4", req.session.user, {maxAge: 1000 * 60 * 60 * 24}); // 1 dia de recordar la cookie
+                    }
+
                     return res.redirect("/users/profile");
                 }
             }
 
             /* retorno al ejs los errores */
-            return res.render("/login", {
+            return res.render("login", {
                 errores: [
                     {
                         msg: "Credenciales invalidas"
@@ -90,5 +105,24 @@ module.exports = {
     },
     profile: (req, res) =>{
         res.render("profile")
+    },
+    fatality: (req, res) => {
+
+        //cuando cierro sesion, mato el req.session
+        req.session.destroy();
+
+        //cuando finalizo la session, tambien me encargo de matar la cookie
+        if(req.cookies.userCom4){
+            res.cookie("userCom4", "", {maxAge: -1})
+        };
+
+        //finalizo redireccionando
+        res.redirect("/");
+    },
+    eliminar: (req, res) => {
+
+        
+
+
     }
-}
+};
